@@ -1,0 +1,45 @@
+CREATE SCHEMA passport;
+CREATE SCHEMA ethdata;
+
+CREATE TABLE passport.bankless_bots (
+	id serial PRIMARY KEY,
+	created_at TIMESTAMP,
+	address VARCHAR ( 50 ),
+	stamps_raw VARCHAR ( 3255 )
+);
+
+CREATE TABLE passport.bankless_sybils (
+	id serial PRIMARY KEY,
+	created_at TIMESTAMP,
+	address VARCHAR ( 50 ),
+	stamps_raw VARCHAR ( 3255 )
+);
+
+CREATE TABLE passport.bankless_valid (
+	id serial PRIMARY KEY,
+	created_at TIMESTAMP,
+	address VARCHAR ( 50 ),
+	stamps_raw VARCHAR ( 3255 )
+);
+
+
+--A custom Postgres function is needed for later steps in table creation.
+---If a test of json formating already exists in your environment, please modify the later table to match your own function.
+----Alternatively the following may be executed:
+
+
+CREATE OR REPLACE FUNCTION is_json(input_text varchar) RETURNS boolean AS $$
+  DECLARE
+    maybe_json json;
+  BEGIN
+    BEGIN
+      maybe_json := input_text;
+    EXCEPTION WHEN others THEN
+      RETURN FALSE;
+    END;
+    RETURN TRUE;
+  END;
+$$ LANGUAGE plpgsql IMMUTABLE;
+
+
+
